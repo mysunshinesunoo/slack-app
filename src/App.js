@@ -1,25 +1,28 @@
-import logo from './logo.svg';
-import './App.css';
+import Signup from "./components/Signup";
+import Sidebar from "./layouts/Sidebar";
+import Dashboard from "./pages/Dashboard";
+import Login from "./pages/Login";
+import { useState, useEffect } from "react";
 
-function App() {
+export default function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState(() =>
+    JSON.parse(localStorage.getItem("user"))
+  );
+
+  useEffect(() => {
+    if (user) {
+      setIsLoggedIn(true);
+      localStorage.setItem("user", JSON.stringify(user));
+    }
+  }, [user]);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {!isLoggedIn && <Login setIsLoggedIn={setIsLoggedIn} setUser={setUser} />}
+      {isLoggedIn && (
+        <Dashboard setIsLoggedIn={setIsLoggedIn} user={user}></Dashboard>
+      )}
     </div>
   );
 }
-
-export default App;
