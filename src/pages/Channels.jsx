@@ -1,13 +1,9 @@
 import { useEffect, useState } from "react";
 import ChannelService from "../services/ChannelService";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit } from "@fortawesome/free-solid-svg-icons";
-import { useNavigate } from "react-router-dom";
 
 export default function Channels({ user }) {
   const [channels, setChannels] = useState([]);
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchChannels() {
@@ -28,7 +24,7 @@ export default function Channels({ user }) {
       <button>
         Create New Channel
       </button>
-      {error && <div style={{ color: "red" }}>{error}</div>}
+      {error && <div>{error}</div>}
       {channels.length > 0 ? (
         channels.map((channel) => (
           <div key={channel.id}>

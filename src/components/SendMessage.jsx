@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import UserService from "../services/UserService";
 import { toast } from "react-toastify";
 import { IoMdSend } from "react-icons/io";
@@ -36,9 +36,7 @@ function SendMessage(props) {
       <form onSubmit={handleSubmit} className="absolute bottom--10 left-0">
         <div>
           <p className="text-gray-900">
-            {selectedReceiver
-              ? `To: ${selectedReceiver.email}`
-              : "No receiver selected"}
+            {selectedReceiver ? `` : "No receiver selected"}
           </p>
         </div>
         <div className="flex">

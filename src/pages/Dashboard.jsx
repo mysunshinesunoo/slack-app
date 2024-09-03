@@ -18,6 +18,7 @@ export default function Dashboard(props) {
   const [messages, setMessages] = useState([]);
   const [selectedReceiver, setSelectedReceiver] = useState(null);
   const [error, setError] = useState(null);
+  const [filteredUserList, setFilteredUserList] = useState([]);
 
   useEffect(() => {
     async function fetchUsers() {
@@ -92,6 +93,38 @@ export default function Dashboard(props) {
     }
   }, [user, channelFlag]);
 
+  // Fetch messages and filter users
+  useEffect(() => {
+    async function fetchMessagesAndFilterUsers() {
+      if (user && userList.length > 0) {
+        try {
+          const fetchedMessages = await UserService.getMessages(
+            user.id,
+            selectedReceiver?.id,
+            "User"
+          );
+          console.log(fetchedMessages); // Log the fetched messages
+          setMessages(fetchedMessages);
+          console.log("Fetched Messages:", fetchedMessages);
+          // Extract unique receiver IDs from messages
+          const receiverIds = Array.from(
+            new Set(fetchedMessages.map((msg) => msg.receiver.id))
+          );
+
+          // Filter userList based on receiver IDs
+          const filteredUsers = userList.filter((user) =>
+            receiverIds.includes(user.id)
+          );
+          setFilteredUserList(filteredUsers);
+          console.log(filteredUsers); // Log the filtered users
+        } catch (error) {
+          console.error("Error fetching messages or filtering users:", error);
+        }
+      }
+    }
+    fetchMessagesAndFilterUsers();
+  }, [user, userList, selectedReceiver]);
+
   return (
     <div>
       <body className="h-screen">
@@ -150,6 +183,27 @@ export default function Dashboard(props) {
                 )}
               </div>
             </div>
+            <div className="mt-4 mb-4">
+              <h2 className="flex items-center text-xl font-bold mb-4">
+                <FaEnvelope className="mr-2" /> DMs User
+              </h2>
+              <div className="overflow-y-auto h-80 scrollbar-thin scrollbar-webkit">
+                {filteredUserList.length > 0 ? (
+                  filteredUserList.map((user) => (
+                    <div
+                      className="pl-3"
+                      key={user.id}
+                      onClick={() => setSelectedReceiver(user)}
+                      style={{ cursor: "pointer" }}
+                    >
+                      <p>{user.email}</p>
+                    </div>
+                  ))
+                ) : (
+                  <div className="pl-3">Loading users...</div>
+                )}
+              </div>
+            </div>
             <button
               onClick={logout}
               className="bg-red-500 text-white px-4 py-2 rounded w-full flex items-center justify-center"
@@ -173,24 +227,38 @@ export default function Dashboard(props) {
                       <FaUserCircle />
                       <span className="m-1">{selectedReceiver.email}</span>
                     </p>
+                    <div className="flex flex-col text-left scrollbar-thin scrollbar-webkit h-80 overflow-y-auto mb-4 pr-5">
+                      {messages.length > 0 ? (
+                        messages.map((message) => {
+                          const isSender = message.sender.id === user.id;
+                          return (
+                            <div
+                              key={message.id}
+                              className={`flex flex-col mt-1 ${
+                                isSender ? "ml-auto" : "mr-auto"
+                              }`}
+                            >
+                              <p
+                                className={`${
+                                  isSender
+                                    ? "bg-purple-400 text-right"
+                                    : "bg-gray-400"
+                                } text-gray-900 dark:bg-gray-700 flex flex-col justify-end w-auto max-w-[300px] pt-1 pb-2 leading-1.5 px-3 border-gray-200 rounded-2xl`}
+                              >
+                                <p className="text-xs font-bold mb-1">
+                                  {isSender ? "You" : message.sender.email}
+                                </p>
+                                {message.body}
+                              </p>
+                            </div>
+                          );
+                        })
+                      ) : (
+                        <div>No messages available</div>
+                      )}
+                    </div>
                   </div>
                 )}
-                <div className="flex flex-col items-start text-left scrollbar-thin scrollbar-webkit h-80 overflow-y-auto mb-4">
-                  {messages.length > 0 ? (
-                    messages.map((message) => (
-                      <div key={message.id}>
-                        <p className="text-gray-900 flex flex-col justify-end w-auto max-w-[300px] mt-1 pt-1 pb-2 leading-1.5 px-3 border-gray-200 bg-gray-500 rounded-2xl dark:bg-gray-700">
-                          <p className="text-xs font-bold mb-1">
-                            {message.sender.email}
-                          </p>
-                          {message.body}
-                        </p>
-                      </div>
-                    ))
-                  ) : (
-                    <div>No messages available</div>
-                  )}
-                </div>
 
                 {/* Send a message */}
                 {selectedReceiver && (

@@ -1,13 +1,9 @@
 import { useState } from "react";
 import ChannelService from "../services/ChannelService";
-import { useNavigate } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
 export default function ChannelCreation({ user }) {
   const [name, setName] = useState("");
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -19,7 +15,6 @@ export default function ChannelCreation({ user }) {
 
     try {
       await ChannelService.createChannel(user, { name });
-      navigate("/channels"); // Redirect to the channels list page after creation
     } catch (error) {
       setError("Failed to create channel. Please try again.");
     }
@@ -38,7 +33,7 @@ export default function ChannelCreation({ user }) {
           />
         </label>
         <button type="submit">
-          <FontAwesomeIcon icon={faPlus} className="icon" /> Create Channel
+           Channel
         </button>
       </form>
       {error && <div style={{ color: "red" }}>{error}</div>}
