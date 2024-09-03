@@ -105,14 +105,6 @@ export default function Dashboard(props) {
             </div>
             {/* LOG OUT */}
             <div className="space-y-4">
-              <button
-                onClick={logout}
-                className="bg-red-500 text-white px-4 py-2 rounded w-full flex items-center justify-center"
-              >
-                <span className="p-1">Log Out</span>
-                <FiLogOut />
-              </button>
-
               {/* CHANNELS */}
               <div className="text-xl flex items-center cursor-pointer"></div>
               <h2 className="flex items-center text-lg font-bold mt-6">
@@ -158,6 +150,13 @@ export default function Dashboard(props) {
                 )}
               </div>
             </div>
+            <button
+              onClick={logout}
+              className="bg-red-500 text-white px-4 py-2 rounded w-full flex items-center justify-center"
+            >
+              <span className="p-1">Log Out</span>
+              <FiLogOut />
+            </button>
           </div>
 
           {/* Chat and User List */}
@@ -180,10 +179,12 @@ export default function Dashboard(props) {
                   {messages.length > 0 ? (
                     messages.map((message) => (
                       <div key={message.id}>
-                        <p className="text-gray-900 flex flex-col justify-end w-auto max-w-[300px] leading-1.5 p-4 border-gray-200 bg-gray-500 rounded-2xl dark:bg-gray-700">
+                        <p className="text-gray-900 flex flex-col justify-end w-auto max-w-[300px] mt-1 pt-1 pb-2 leading-1.5 px-3 border-gray-200 bg-gray-500 rounded-2xl dark:bg-gray-700">
+                          <p className="text-xs font-bold mb-1">
+                            {message.sender.email}
+                          </p>
                           {message.body}
                         </p>
-                        <p className="text-xs">From: {message.sender.email}</p>
                       </div>
                     ))
                   ) : (

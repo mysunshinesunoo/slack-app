@@ -25,7 +25,7 @@ export default function Channels({ user }) {
   return (
     <div>
       <h1>Channels</h1>
-      <button onClick={() => navigate("/create-channel")}>
+      <button>
         Create New Channel
       </button>
       {error && <div style={{ color: "red" }}>{error}</div>}
@@ -35,8 +35,8 @@ export default function Channels({ user }) {
             <p>Channel ID: {channel.id}</p>
             <p>Channel Name: {channel.name}</p>
             <p>Owner ID: {channel.owner_id}</p>
-            <button onClick={() => navigate(`/messages/${channel.id}`)}>
-              <FontAwesomeIcon icon={faEdit} className="icon" /> Go to Channel
+            <button >
+              Go to Channel
             </button>
           </div>
         ))
