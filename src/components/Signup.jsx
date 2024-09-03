@@ -12,14 +12,15 @@ export default function SignUp({ setShowSignup }) {
 
   async function handleSubmit(event) {
     event.preventDefault();
-    const user = {
+    const info = {
       email,
       password,
       password_confirmation,
     };
-
-    await UserService.signUp(user);
-    await setShowSignup(false);
+    const response = await UserService.signUp(info);
+    if (response) {
+      setShowSignup(false);
+    }
   }
 
   function handleLogin() {
@@ -61,7 +62,7 @@ export default function SignUp({ setShowSignup }) {
                     onChange={(event) => setEmail(event.target.value)}
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="name@email.com"
-                    required=""
+                    required
                   />
                 </div>
                 <div>
@@ -78,7 +79,7 @@ export default function SignUp({ setShowSignup }) {
                     placeholder="********"
                     onChange={(event) => setPassword(event.target.value)}
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    required=""
+                    required
                   />
                 </div>
                 <div>
@@ -97,7 +98,7 @@ export default function SignUp({ setShowSignup }) {
                       setPasswordConfirmation(event.target.value)
                     }
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    required=""
+                    required
                   />
                 </div>
                 <div class="flex items-start">
@@ -107,7 +108,7 @@ export default function SignUp({ setShowSignup }) {
                       aria-describedby="terms"
                       type="checkbox"
                       class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
-                      required=""
+                      required
                     />
                   </div>
                   <div class="ml-3 text-xs">
